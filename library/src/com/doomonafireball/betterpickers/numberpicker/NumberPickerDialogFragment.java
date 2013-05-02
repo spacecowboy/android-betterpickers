@@ -7,6 +7,7 @@ import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,15 +40,11 @@ public class NumberPickerDialogFragment extends DialogFragment {
     private int mDecimalVisibility = View.VISIBLE;
 
     public static NumberPickerDialogFragment newInstance(int themeResId) {
-        final NumberPickerDialogFragment frag = new NumberPickerDialogFragment();
-        Bundle args = new Bundle();
-        args.putInt(THEME_RES_ID_KEY, themeResId);
-        frag.setArguments(args);
-        return frag;
+        return newInstance(themeResId, null, null, null, null);
     }
 
     public static NumberPickerDialogFragment newInstance(int themeResId, Integer minNumber, Integer maxNumber,
-            int plusMinusVisibility, int decimalVisibility) {
+            Integer plusMinusVisibility, Integer decimalVisibility) {
         final NumberPickerDialogFragment frag = new NumberPickerDialogFragment();
         Bundle args = new Bundle();
         args.putInt(THEME_RES_ID_KEY, themeResId);
@@ -57,8 +54,12 @@ public class NumberPickerDialogFragment extends DialogFragment {
         if (maxNumber != null) {
             args.putInt(MAX_NUMBER_KEY, maxNumber);
         }
-        args.putInt(PLUS_MINUS_VISIBILITY_KEY, plusMinusVisibility);
-        args.putInt(DECIMAL_VISIBILITY_KEY, decimalVisibility);
+        if (plusMinusVisibility != null) {
+            args.putInt(PLUS_MINUS_VISIBILITY_KEY, plusMinusVisibility);
+        }
+        if (decimalVisibility != null) {
+            args.putInt(DECIMAL_VISIBILITY_KEY, decimalVisibility);
+        }
         frag.setArguments(args);
         return frag;
     }
@@ -129,10 +130,15 @@ public class NumberPickerDialogFragment extends DialogFragment {
             @Override
             public void onClick(View view) {
                 final Activity activity = getActivity();
+                final Fragment fragment = getTargetFragment();
                 if (activity instanceof NumberPickerDialogHandler) {
                     final NumberPickerDialogHandler act =
                             (NumberPickerDialogHandler) activity;
                     act.onDialogNumberSet(mPicker.getNumber(), mPicker.getDecimal(), mPicker.getIsNegative(),
+                            mPicker.getEnteredNumber());
+                } else if (fragment instanceof NumberPickerDialogHandler) {
+                    final NumberPickerDialogHandler frag = (NumberPickerDialogHandler) fragment;
+                    frag.onDialogNumberSet(mPicker.getNumber(), mPicker.getDecimal(), mPicker.getIsNegative(),
                             mPicker.getEnteredNumber());
                 } else {
                     //Log.e("Error! Activities that use NumberPickerDialogFragment must implement "
