@@ -35,6 +35,31 @@ public class DatePickerDialogFragment extends DialogFragment {
     private ColorStateList mTextColor;
     private int mButtonBackgroundResId;
     private int mDialogBackgroundResId;
+    
+    private DatePickerDialogHandler listener = null;
+    
+    public void setListener(final DatePickerDialogHandler listener) {
+    	this.listener = listener;
+    }
+    
+    public static DatePickerDialogFragment newInstance() {
+        final DatePickerDialogFragment frag = new DatePickerDialogFragment();
+        Bundle args = new Bundle();
+        args.putInt(THEME_RES_ID_KEY, R.style.BetterPickersDialogFragment);
+        frag.setArguments(args);
+        return frag;
+    }
+
+    public static DatePickerDialogFragment newInstance(int monthOfYear, int dayOfMonth, int year) {
+        final DatePickerDialogFragment frag = new DatePickerDialogFragment();
+        Bundle args = new Bundle();
+        args.putInt(MONTH_KEY, monthOfYear);
+        args.putInt(DAY_KEY, dayOfMonth);
+        args.putInt(YEAR_KEY, year);
+        args.putInt(THEME_RES_ID_KEY, R.style.BetterPickersDialogFragment);
+        frag.setArguments(args);
+        return frag;
+    }
 
     public static DatePickerDialogFragment newInstance(int themeResId) {
         final DatePickerDialogFragment frag = new DatePickerDialogFragment();
@@ -121,7 +146,10 @@ public class DatePickerDialogFragment extends DialogFragment {
             @Override
             public void onClick(View view) {
                 final Activity activity = getActivity();
-                if (activity instanceof DatePickerDialogHandler) {
+                if (listener != null) {
+                	listener.onDialogDateSet(mPicker.getYear(), mPicker.getMonthOfYear(), mPicker.getDayOfMonth());
+                }
+                else if (activity instanceof DatePickerDialogHandler) {
                     final DatePickerDialogHandler act =
                             (DatePickerDialogHandler) activity;
                     act.onDialogDateSet(mPicker.getYear(), mPicker.getMonthOfYear(), mPicker.getDayOfMonth());

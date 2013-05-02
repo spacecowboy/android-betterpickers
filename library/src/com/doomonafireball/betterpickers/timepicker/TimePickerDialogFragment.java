@@ -28,6 +28,20 @@ public class TimePickerDialogFragment extends DialogFragment {
     private ColorStateList mTextColor;
     private int mButtonBackgroundResId;
     private int mDialogBackgroundResId;
+    
+    private TimePickerDialogHandler listener = null;
+    
+    public void setListener(final TimePickerDialogHandler listener) {
+    	this.listener = listener;
+    }
+    
+    public static TimePickerDialogFragment newInstance() {
+        final TimePickerDialogFragment frag = new TimePickerDialogFragment();
+        Bundle args = new Bundle();
+        args.putInt(THEME_RES_ID_KEY, R.style.BetterPickersDialogFragment);
+        frag.setArguments(args);
+        return frag;
+    }
 
     public static TimePickerDialogFragment newInstance(int themeResId) {
         final TimePickerDialogFragment frag = new TimePickerDialogFragment();
@@ -92,7 +106,10 @@ public class TimePickerDialogFragment extends DialogFragment {
             @Override
             public void onClick(View view) {
                 final Activity activity = getActivity();
-                if (activity instanceof TimePickerDialogHandler) {
+                if (listener != null) {
+                	listener.onDialogTimeSet(mPicker.getHours(), mPicker.getMinutes());
+                }
+                else if (activity instanceof TimePickerDialogHandler) {
                     final TimePickerDialogHandler act =
                             (TimePickerDialogHandler) activity;
                     act.onDialogTimeSet(mPicker.getHours(), mPicker.getMinutes());
