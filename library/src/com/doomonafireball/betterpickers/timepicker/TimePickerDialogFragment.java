@@ -99,6 +99,9 @@ public class TimePickerDialogFragment extends DialogFragment {
         mCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+            	if (listener != null) {
+                	listener.onDialogTimeCancel();
+                }
                 dismiss();
             }
         });
