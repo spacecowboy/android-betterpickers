@@ -85,6 +85,7 @@ public class TimePickerDialogFragment extends DialogFragment {
             mDividerColor = a.getColor(R.styleable.BetterPickersDialogFragment_bpDividerColor, mDividerColor);
             mDialogBackgroundResId = a
                     .getResourceId(R.styleable.BetterPickersDialogFragment_bpDialogBackground, mDialogBackgroundResId);
+        	a.recycle();
         }
     }
 
@@ -145,5 +146,6 @@ public class TimePickerDialogFragment extends DialogFragment {
     public interface TimePickerDialogHandler {
 
         void onDialogTimeSet(int hourOfDay, int minute);
+        void onDialogTimeCancel();
     }
 }

@@ -139,6 +139,9 @@ public class DatePickerDialogFragment extends DialogFragment {
         mCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+            	if (listener != null) {
+            		listener.onDialogCancel();
+            	}
                 dismiss();
             }
         });
@@ -187,5 +190,6 @@ public class DatePickerDialogFragment extends DialogFragment {
     public interface DatePickerDialogHandler {
 
         void onDialogDateSet(int year, int monthOfYear, int dayOfMonth);
+        void onDialogCancel();
     }
 }
